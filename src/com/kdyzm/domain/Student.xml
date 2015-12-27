@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kdyzm.domain.Student">
+	<resultMap type="com.kdyzm.domain.Student" id="studentMap">
+		<id column="studentid" property="id"></id>
+		<result column="name" property="name" />
+		<result column="password" property="password" />
+		<result column="age" property="age" />
+		<association property="clazz" javaType="com.kdyzm.domain.Clazz">
+			<id property="id" column="clazzid"></id>
+			<result property="name" column="name" />
+			<result column="describtion" property="desc" />
+		</association>
+	</resultMap>
+	<!-- resultType="com.kdyzm.domain.Student" -->
+	<!-- 根据UserId查询User对象的查询方法 -->
+	<select id="selectUserById" parameterType="int" resultMap="studentMap">
+		select s.* ,c.* from student s,clazz c where s.clazz=c.clazzid and
+		s.studentid=#{id};
+	</select>
+	<select id="selectAllStudent" resultType="com.kdyzm.domain.Student">
+		select * from Student
+	</select>
+	<insert id="insertIntoStudent" parameterType="com.kdyzm.domain.Student">
+		insert into
+		student(studentid,name,password,age)
+		values(#{id},#{name},#{password},#{age})
+	</insert>
+	<select id="selectStudentByIdReturnMap" parameterType="int"
+		resultType="hashMap">
+		select * from student where studentid= #{id}
+	</select>
+	<select id="selectAllStudentsReturnListMap" resultType="hashMap">
+		select *
+		from student
+	</select>
+	<delete id="deleteUserById" parameterType="string">
+		delete from student
+		where studentid = #{id}
+	</delete>
+	<update id="updateStudentByStudentObject" parameterType="com.kdyzm.domain.Student">
+		update
+		student set name=#{name},password=#{password},age=#{age} where
+		studentid=#{id}
+	</update>
+	<update id="updateStudentByStudentMap" parameterType="hashMap">
+		update
+		student set name=#{name},password=#{password},age=#{age} where
+		studentid=#{id}
+	</update>
+	<!-- 这里是动态查询的方法 -->
+	<select id="selectAllByCondition" parameterType="com.kdyzm.domain.Student"
+		resultMap="studentMap">
+		select * from student
+		<where>
+			<if test="id !=null">
+				studentid=#{id}
+			</if>
+			<if test="name !=null">
+				and name=#{name}
+			</if>
+			<if test="age!=null">
+				and age=#{age}
+			</if>
+			<if test="password !=null">
+				and password=#{password}
+			</if>
+		</where>
+	</select>
+	<!-- 这里是动态更新的方法 -->
+	<update id="updateStudentByCandition" parameterType="com.kdyzm.domain.Student">
+		update student
+		<set>
+			<!-- <if test="id!=null">
+				studentid=#{id}
+			</if> -->
+			<if test="name!=null">
+				name=#{name}
+			</if>
+			<if test="password!=null">
+				password=#{password}
+			</if>
+			<if test="age!=null">
+				age=#{age}
+			</if>
+			<if test="clazz!=null">
+				clazz=#{clazz}
+			</if>
+		</set>
+		where studentid=#{id}
+	</update>
+</mapper>

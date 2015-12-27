@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kdyzm.domain.Clazz">
+	<resultMap type="com.kdyzm.domain.Clazz" id="clazzMap">
+		<id property="id" column="clazzid"></id>
+		<result property="name" column="name" />
+		<result column="describtion" property="desc" />
+		<collection property="students" ofType="com.kdyzm.domain.Student">
+			<id column="studentid" property="id"></id>
+			<result column="name" property="name" />
+			<result column="password" property="password" />
+			<result column="age" property="age" />
+		</collection>
+	</resultMap>
+
+	<select id="selectClazzById" resultMap="clazzMap" parameterType="int">
+		select s.*,c.* from student s,clazz c where c.clazzid =#{id} and s.clazz=c.clazzid
+	</select>
+</mapper>
